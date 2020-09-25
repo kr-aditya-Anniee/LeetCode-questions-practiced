@@ -1,0 +1,100 @@
+You are given two non-empty linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+Follow up:
+What if you cannot modify the input lists? In other words, reversing the lists is not allowed.
+
+Example:
+
+Input: (7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 8 -> 0 -> 7
+
+ANS :
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* revList(ListNode *head){
+        ListNode *curr = head,*prev=NULL,*next=NULL;
+        while(curr){
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr=next;
+        }
+        return prev;
+    }
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode *L1 = revList(l1);
+        ListNode *L2 = revList(l2);
+        
+        int carry=0,sum;
+        ListNode *newHead ,*ans;
+        newHead = new ListNode();
+        ans = newHead;
+        while(L1!=NULL || L2!=NULL){
+            if(!L1){
+                sum = L2->val+carry;
+                if(sum>9)
+                {
+                    carry = sum/10;
+                    sum = sum%10;
+                }
+                else
+                    carry = 0;
+                
+                ans->next = new ListNode(sum);
+                
+                }
+            else if(!L2){
+                
+                 sum = L1->val+carry;
+                if(sum>9)
+                {
+                    carry = sum/10;
+                    sum = sum%10;
+                }
+                else
+                    carry = 0;
+                ans->next = new ListNode(sum);
+            }
+            else{
+                
+                sum = L1->val + L2->val + carry;
+                if(sum > 9){
+                    carry = sum/10;
+                    sum = sum%10;
+                }
+                else
+                    carry = 0;
+                
+                ans->next = new ListNode(sum);
+                
+                
+                 }
+            if(L1)
+                L1=L1->next;
+            if(L2)
+                L2=L2->next;
+            
+            ans = ans->next;
+                
+            }
+        if(carry!=0)
+            ans->next = new ListNode(carry);
+        
+        newHead = newHead->next;
+        return revList(newHead);
+        
+    }
+};
