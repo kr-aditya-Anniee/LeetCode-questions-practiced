@@ -1,0 +1,64 @@
+Insert in sorted circular Array 
+
+idea is to check for how its inputed.
+1. empty list case
+2. list has one element
+3. find if the insert value is largest in list , if yes insert at end
+4.check of prev and next element and find correct position
+5. corner cases of  prev->val > next->val and prev->val >= data and next->val > data) [10,7] insert = 2;
+6. corner case of data >= prev->val && data > next->val && prev->val > next->val [10,7] insert 100
+7.data <= or >=prev as corner case of duplicate element [1,9,11] insert 11.
+
+class Solution {
+public:
+    Node* insert(Node* head, int data) {
+     Node *curr = head;
+        Node *temp = new Node(data);
+        
+        //empty list;
+        if(curr==NULL){
+            temp->next = temp;
+            return temp;
+        }
+        else if (curr->next == curr){
+            curr->next = temp;
+            temp->next = curr;
+            return curr;
+        }
+        else
+        {
+            Node *next = curr->next;
+            Node *prev = curr;
+            while(next != head){
+                if(next->val > data && prev->val <= data)  {
+                    
+                    temp->next = next;
+                    prev->next = temp;
+                    return head;
+                }
+                else if(prev->val > next->val and prev->val >= data and next->val > data){
+                    
+                    temp->next = next;
+                    prev->next = temp;
+                    return head;
+                }
+                else if(data >= prev->val && data > next->val && prev->val > next->val){
+                    temp->next = next;
+                    prev->next = temp;
+                    return head;
+                }
+                
+                next=next->next;
+                prev = prev->next;
+            }
+            
+            if(next==head){
+            
+                temp->next = head;
+                prev->next = temp;
+                return head;
+            }
+        }
+        return NULL;
+    }
+};
